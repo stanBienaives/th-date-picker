@@ -1,0 +1,47 @@
+.body {
+  font-size: 14pt;
+}
+.cal-wrapper {
+    max-width: 3650px;
+    min-width: 365px;
+    width:  100%;
+    display: table;
+    border-collapse:separate;
+    /* border-spacing:5em; */
+    table-layout: fixed;
+}
+
+.cal-weekdays {
+    width: 100%;
+    border: 0px;
+    font-weight: bold;
+    display: table-row;
+}
+
+.cal-weekday {
+    border: 0px;
+    text-align: center;
+    line-height: 100%;
+    display: table-cell;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* border-bottom: solid 1px #eee; */
+}
+
+.cal-days {
+    display: table-row;
+    width: 100%;
+    line-height: 100px;
+}
+
+.cal-day {
+    display: table-cell;
+    text-align: center;
+}
+
+.cal-day.selected > span{
+    background:#E2C9AA;
+    padding: 10px 14px;
+    border-radius: 18px;
+}
+
