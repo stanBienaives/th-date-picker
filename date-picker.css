@@ -45,3 +45,9 @@
     border-radius: 18px;
 }
 
+.cal-hour.selected > span {
+    background:#E2C9AA;
+    padding: 10px 14px;
+    border-radius: 18px;
+}
+
