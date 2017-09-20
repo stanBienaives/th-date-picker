@@ -70,19 +70,22 @@ datePickerComponent.prototype.render = function (state, oldState) {
 
 //WEEKDAY COMPONENT
 var weekdaysComponent = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.createElement('div')
+  this.container.className = 'cal-weekdays'
+  this.container.id = 'cal-weekdays'
+  wrapper.appendChild(this.container);
+
 }
 
 weekdaysComponent.prototype.render =function(state, oldState) {
-  var wrapper = document.getElementById('cal-wrapper');
-  var weekdaysContainer = document.createElement('div')
-  weekdaysContainer.className = 'cal-weekdays'
 
-  appendColumnsHelper(weekdaysContainer, state.availableDates.slice(0,7),  function build(weekDay , date) {
+  this.container.innerHTML = '';
+  appendColumnsHelper(this.container, state.availableDates.slice(0,7),  function build(weekDay , date) {
     weekDay.className = 'cal-weekday';
     weekDay.innerText = WEEKDAYS[date.getDay()];
   });
 
-  wrapper.appendChild(weekdaysContainer);
 
 }
 
@@ -96,8 +99,6 @@ var hoursComponent = function (state) {
 };
 
 hoursComponent.prototype.render = function(state, oldState) {
-  var wrapper = document.getElementById('cal-wrapper');
-  var hoursContainer = document.getElementById('cal-hours');
 
   this.container.innerHTML = '';
 
@@ -114,38 +115,37 @@ hoursComponent.prototype.render = function(state, oldState) {
     this.container.appendChild(hour);
   }
 
-  //wrapper.appendChild(hoursContainer);
 
 }
 
 //DAY COMPONENTS
 var daysComponent = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.createElement('div')
+  this.container.id = 'cal-days';
+  this.container.className = 'cal-days'
+  wrapper.appendChild(this.container);
   this.hoursView = new hoursComponent();
 }
 
 daysComponent.prototype.render = function (state, oldState) {
-  var wrapper = document.getElementById('cal-wrapper');
-  var daysContainer = document.getElementById('cal-days');
-  if (!daysContainer) {
-    var daysContainer = document.createElement('div')
-    daysContainer.id = 'cal-days';
-    daysContainer.className = 'cal-days'
-  } else {
-    daysContainer.innerHTML = '';
-  }
+  this.container.innerHTML = '';
 
-  appendColumnsHelper(daysContainer, state.availableDates.slice(0,7), function(day, date, i) {
+  appendColumnsHelper(this.container, state.availableDates.slice(0,7), function(day, date, i) {
     day.className = 'cal-day';
     day.innerHTML =  '<span>' + date.getDate(); + '</span>';
 
-    if (state.isDateSelected(date) || state.isCurrentDate(date)) {
+    if (state.isDateSelected(date)) {
       day.className += ' selected';
+    }
+
+    if (state.isCurrentDate(date)) {
+      day.className += ' current';
     }
     day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
 
   }.bind(this));
 
-  wrapper.appendChild(daysContainer);
   this.hoursView.render(state, oldState);
 
 }
