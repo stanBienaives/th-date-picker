@@ -5,12 +5,21 @@ var State = function State() {
   this.availableDates = [];
 
   var today = new Date();
+  var firstDisplayDate = today.findLastMonday(today);
+
+  // first date is the last monday
+
 
   this.currentDate = today;
 
+
   for (var i=0; i<90;i++) {
-    this.availableDates.push(today.addDay(i));
+    this.availableDates.push(firstDisplayDate.addDay(i));
   }
+  this.firstSelectableDate = today;
+
+  this.cursor = 0;
+  this.displayedLines = 1;
 }
 
 State.prototype.isDateSelected = function (date) {
@@ -29,6 +38,18 @@ State.prototype.isHourSelected = function (date) {
 
 State.prototype.isCurrentDate = function (date) {
   return this.currentDate.toDateString() == date.toDateString();
+}
+
+
+State.prototype.isFirst = function (date) {
+  if (this.selected.length == 0)
+    return false;
+
+  return this.selected[0].toString() == date.toString();
+}
+
+State.prototype.isSelectable = function (date) {
+  return date >= this.firstSelectableDate;
 }
 
 
@@ -51,6 +72,8 @@ var Actions = {
   "SET_CURRENT_DATE": function (state, date) {
     state.currentDate = date;
     this.render(state);
+  },
+  "NEXT_PANEL": function (state) {
   },
 }
 
@@ -102,17 +125,46 @@ hoursComponent.prototype.render = function(state, oldState) {
 
   this.container.innerHTML = '';
 
+  this.silos = [];
+  for(var i=0; i < 3; i++) {
+    var silo = document.createElement('div');
+    silo.className = 'cal-hour-silo';
+    this.container.appendChild(silo);
+    this.silos.push(silo);
+  }
+
+  console.log(this.silos);
+
   for(var i=6;i < 22;i++) {
     var d = new Date(state.currentDate);
+    var silo;
+    if( i <=11)
+      silo = this.silos[0];
+    if ( i > 11 && i <= 17)
+      silo = this.silos[1];
+    if (i > 17)
+      silo = this.silos[2];
+
     d.setHours(i);
     var hour = document.createElement('div');
     hour.className = 'cal-hour';
+
+
+    if (!state.isSelectable(d)) {
+      hour.className += ' disabled';
+    }
     if(state.isHourSelected(d)) {
       hour.className += ' selected';
     }
-    hour.innerHTML = '<span>' + d.getHours() + '</span>';
-    hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(this, state, d));
-    this.container.appendChild(hour);
+
+    if (state.isFirst(d)) {
+      hour.className += ' firstchoice';
+    }
+    hour.innerHTML = '<span>' + d.getHours() + ' h</span>';
+    if (state.isSelectable(d)) {
+      hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(this, state, d));
+    }
+    silo.appendChild(hour);
   }
 
 
@@ -131,9 +183,13 @@ var daysComponent = function () {
 daysComponent.prototype.render = function (state, oldState) {
   this.container.innerHTML = '';
 
-  appendColumnsHelper(this.container, state.availableDates.slice(0,7), function(day, date, i) {
+  appendColumnsHelper(this.container, state.availableDates.slice(0,14), function(day, date, i) {
     day.className = 'cal-day';
     day.innerHTML =  '<span>' + date.getDate(); + '</span>';
+
+    if (!state.isSelectable(date)) {
+      day.className += ' disabled'
+    }
 
     if (state.isDateSelected(date)) {
       day.className += ' selected';
@@ -142,7 +198,10 @@ daysComponent.prototype.render = function (state, oldState) {
     if (state.isCurrentDate(date)) {
       day.className += ' current';
     }
-    day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
+
+    if (state.isSelectable(date)) {
+      day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
+    }
 
   }.bind(this));
 
@@ -163,6 +222,20 @@ Date.prototype.addDay = function (days) {
   var dat = new Date(this.valueOf());
   dat.setDate(dat.getDate() + days);
   return dat;
+}
+
+
+Date.prototype.removeDay = function (days) {
+  var dat = new Date(this.valueOf());
+  dat.setDate(dat.getDate() - days);
+  return dat;
+}
+
+Date.prototype.findLastMonday = function (date) {
+  while( date.getDay() != 1) {
+    date = date.removeDay(1);
+  }
+  return date;
 }
 
 Date.prototype.getDayAndHours = function () {

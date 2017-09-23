@@ -2,7 +2,7 @@
   font-size: 14pt;
 }
 .cal-wrapper {
-    max-width: 365px;
+    max-width: 500px;
     min-width: 365px;
     width:  100%;
     /*display: table;*/
@@ -56,10 +56,43 @@
   padding: 10px 14px;
 }
 
+.cal-day.disabled > span {
+   background: #eee;
+   color: #999;
+   padding: 10px 14px;
+   border-radius: 18px;
+}
+
 .cal-hour.selected > span {
     background:#E2C9AA;
     padding: 10px 14px;
     border-radius: 18px;
+}
+
+.cal-hour.firstchoice > span {
+   background: #eca130;
+}
+
+.cal-hour.disabled > span {
+   color: #999;
+   background-color: #eee;
+   border-radius: 18px;
+   padding: 10px 14px;
+}
+
+
+.cal-hour {
+   margin-top: 10px;
+}
+
+
+
+.cal-hour-silo {
+   width: 33%;
+   margin: 0px;
+   float: left;
+   min-height: 50px;
+   text-align: center;
 }
 
 
