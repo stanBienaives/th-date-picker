@@ -65,6 +65,11 @@
    border-radius: 18px;
 }
 
+.cal-day.firstchoice > span{
+   background: #c0e1f1;
+
+}
+
 .cal-hour.selected > span {
     background:#E2C9AA;
     padding: 10px 14px;
@@ -72,7 +77,7 @@
 }
 
 .cal-hour.firstchoice > span {
-   background: #eca130;
+   background: #c0e1f1;
 }
 
 .cal-hour.disabled > span {

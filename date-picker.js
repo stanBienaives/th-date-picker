@@ -31,6 +31,13 @@ State.prototype.isDateSelected = function (date) {
   return !!selected;
 }
 
+State.prototype.isDateFirstSelected = function (date) {
+  if (!this.firstSelected())
+    return false;
+
+  return date.toDateString() === this.firstSelected().toDateString();
+}
+
 State.prototype.isHourSelected = function (date) {
   var selected =  this.selected.find(function (d) {
     return d.toDateString() + d.getHours() == date.toDateString() + date.getHours();
@@ -42,12 +49,16 @@ State.prototype.isCurrentDate = function (date) {
   return this.currentDate.toDateString() == date.toDateString();
 }
 
+State.prototype.firstSelected = function () {
+  return this.selected[0];
+}
+
 
 State.prototype.isFirst = function (date) {
   if (this.selected.length == 0)
     return false;
 
-  return this.selected[0].toString() == date.toString();
+  return this.firstSelected().toString() == date.toString();
 }
 
 State.prototype.isSelectable = function (date) {
@@ -258,6 +269,10 @@ daysComponent.prototype.render = function (state, oldState) {
 
     if (state.isCurrentDate(date)) {
       day.className += ' current';
+    }
+
+    if (state.isDateFirstSelected(date)) {
+      day.className += ' firstchoice';
     }
 
     if (state.isSelectable(date)) {
