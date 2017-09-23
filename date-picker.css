@@ -34,7 +34,7 @@
 
 .cal-days {
     width: 100%;
-    line-height: 100px;
+    line-height: 50px;
 }
 
 .cal-day {
@@ -57,8 +57,9 @@
 }
 
 .cal-day.disabled > span {
-   background: #eee;
-   color: #999;
+   /*background: #eee;*/
+   color: #ccc;
+
    padding: 10px 14px;
    border-radius: 18px;
 }
@@ -74,8 +75,8 @@
 }
 
 .cal-hour.disabled > span {
-   color: #999;
-   background-color: #eee;
+   color: #ccc;
+   /*background-color: #eee;*/
    border-radius: 18px;
    padding: 10px 14px;
 }
@@ -95,4 +96,30 @@
    text-align: center;
 }
 
+
+.cal-navigator {
+   position: relative;
+   /*margin-top: 10px;*/
+   height: 10px;
+}
+
+.cal-navigator-prev {
+   position: absolute;
+   left: 7.15%;
+   top: 0px;
+   width: 30px;
+}
+
+.cal-navigator-next {
+   position: absolute;
+   right: 1.15%;
+   top: 0px;
+   width: 30;
+}
+
+.cal-navigator-month {
+   position: absolute;
+   left: 50%;
+   transform: translate(-50%, 0);
+}
 

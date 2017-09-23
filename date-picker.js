@@ -1,5 +1,7 @@
 var WEEKDAYS = ['D','L','M','M','J','V','S'];
 
+var MONTHS = ['JANVIER', 'FEVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN', 'JUILLET', 'AOUT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DECEMBRE'];
+
 var State = function State() {
   this.selected = [];
   this.availableDates = [];
@@ -19,7 +21,7 @@ var State = function State() {
   this.firstSelectableDate = today;
 
   this.cursor = 0;
-  this.displayedLines = 1;
+  this.displayedLines = 2;
 }
 
 State.prototype.isDateSelected = function (date) {
@@ -52,6 +54,15 @@ State.prototype.isSelectable = function (date) {
   return date >= this.firstSelectableDate;
 }
 
+State.prototype.displayMonth = function () {
+  return MONTHS[this.firstPanelDate().getMonth()];
+
+}
+
+State.prototype.firstPanelDate = function () {
+ return this.availableDates[this.cursor * 7 * this.displayedLines];
+
+}
 
 //ACTION RECORD
 var Actions = {
@@ -74,20 +85,68 @@ var Actions = {
     this.render(state);
   },
   "NEXT_PANEL": function (state) {
+    state.cursor += 1;
+    state.currentDate = state.firstPanelDate();
+    this.render(state);
   },
+  "PREVIOUS_PANEL": function (state) {
+    if( state.cursor == 0)
+      return;
+
+    state.cursor -= 1;
+    state.currentDate = state.firstPanelDate();
+    if( state.firstPanelDate() < state.firstSelectableDate)
+      state.currentDate = state.firstSelectableDate;
+    this.render(state);
+  }
 }
 
 
 // DATE PICKER COMPONENT
 var datePickerComponent = function () {
+  this.navigatorView = new navigatorComponent();
   this.weekdaysView = new weekdaysComponent();
   this.daysView = new daysComponent();
 }
 
 
 datePickerComponent.prototype.render = function (state, oldState) {
+  this.navigatorView.render(state, oldState, this);
   this.weekdaysView.render(state, oldState);
   this.daysView.render(state, oldState);
+}
+
+
+// NAVIGATOR COMPONENT
+var navigatorComponent = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.createElement('div')
+  this.container.className = 'cal-navigator'
+  this.container.id = 'cal-navigator'
+  wrapper.appendChild(this.container);
+}
+
+navigatorComponent.prototype.render = function (state, oldState, parent) {
+  this.container.innerHTML = '';
+  var prevButton = document.createElement('div');
+  prevButton.className += ' cal-navigator-prev';
+  prevButton.innerHTML = '<';
+  prevButton.addEventListener("click", Actions['PREVIOUS_PANEL'].bind(parent, state));
+
+
+  var nextButton = document.createElement('div');
+  nextButton.className += ' cal-navigator-next';
+  nextButton.innerHTML = '>';
+  nextButton.addEventListener("click", Actions['NEXT_PANEL'].bind(parent, state));
+
+  var month = document.createElement('div');
+  month.className += ' cal-navigator-month';
+  month.innerHTML = '<span>' +  state.displayMonth() + '<span>';
+
+  this.container.appendChild(prevButton);
+  this.container.appendChild(month);
+  this.container.appendChild(nextButton);
+
 }
 
 
@@ -183,7 +242,9 @@ var daysComponent = function () {
 daysComponent.prototype.render = function (state, oldState) {
   this.container.innerHTML = '';
 
-  appendColumnsHelper(this.container, state.availableDates.slice(0,14), function(day, date, i) {
+  var start = state.cursor * 7 * state.displayedLines;
+  var stop  = start + 7*state.displayedLines;
+  appendColumnsHelper(this.container, state.availableDates.slice(start, stop), function(day, date, i) {
     day.className = 'cal-day';
     day.innerHTML =  '<span>' + date.getDate(); + '</span>';
 
@@ -201,6 +262,8 @@ daysComponent.prototype.render = function (state, oldState) {
 
     if (state.isSelectable(date)) {
       day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
+    } else {
+      day.addEventListener("click", Actions['NEXT_PANEL'].bind(this, state));
     }
 
   }.bind(this));
