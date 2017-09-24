@@ -85,10 +85,10 @@ var Actions = {
     }).indexOf(date.getDayAndHours());
 
     if( position === -1 ) {
-      if (state.config.singleSelection) {
-        state.selected = [date];
-      } else {
+      if (state.config.multipleDates) {
         state.selected.push(date);
+      } else {
+        state.selected = [date];
       }
     } else {
       state.selected.splice(position, 1);
@@ -199,7 +199,7 @@ var hoursComponent = function (state) {
   wrapper.appendChild(this.container);
 };
 
-hoursComponent.prototype.render = function(state, oldState) {
+hoursComponent.prototype.render = function(state, oldState, parent) {
 
   this.container.innerHTML = '';
 
@@ -217,7 +217,6 @@ hoursComponent.prototype.render = function(state, oldState) {
     this.silos.push(silo);
   }
 
-  console.log(this.silos);
 
   for(var i=6;i < 22;i++) {
     var d = new Date(state.currentDate);
@@ -246,7 +245,7 @@ hoursComponent.prototype.render = function(state, oldState) {
     }
     hour.innerHTML = '<span>' + d.getHours() + ' h</span>';
     if (state.isSelectable(d)) {
-      hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(this, state, d));
+      hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(parent, state, d));
     }
     silo.appendChild(hour);
   }
@@ -319,7 +318,7 @@ daysComponent.prototype.render = function (state, oldState, parent) {
 
   }.bind(this));
 
-  this.hoursView.render(state, oldState);
+  this.hoursView.render(state, oldState, this);
 
 }
 
@@ -356,6 +355,7 @@ Date.prototype.getDayAndHours = function () {
   var dat = new Date(this.valueOf());
   return dat.getYear() + '-' + dat.getMonth() + '-' + dat.getDate() + ' ' + dat.getHours();
 }
+
 
 //var datePickerView = new datePickerComponent();
 
