@@ -2,7 +2,9 @@ var WEEKDAYS = ['D','L','M','M','J','V','S'];
 
 var MONTHS = ['JANVIER', 'FEVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN', 'JUILLET', 'AOUT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DECEMBRE'];
 
-var State = function State() {
+var State = function State(config) {
+
+  this.config = config || {};
   this.selected = [];
   this.availableDates = [];
 
@@ -83,7 +85,11 @@ var Actions = {
     }).indexOf(date.getDayAndHours());
 
     if( position === -1 ) {
-      state.selected.push(date);
+      if (state.config.singleSelection) {
+        state.selected = [date];
+      } else {
+        state.selected.push(date);
+      }
     } else {
       state.selected.splice(position, 1);
     }
@@ -114,11 +120,11 @@ var Actions = {
 
 
 // DATE PICKER COMPONENT
-var datePickerComponent = function () {
+var datePickerComponent = function (config) {
   this.navigatorView = new navigatorComponent();
   this.weekdaysView = new weekdaysComponent();
   this.daysView = new daysComponent();
-  var initialState = new State();
+  var initialState = new State(config);
   this.render(initialState);
 }
 
