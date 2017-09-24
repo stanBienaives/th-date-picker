@@ -46,7 +46,7 @@
 }
 
 .cal-day.selected > span{
-    background:#E2C9AA;
+    background: rgba(226,201,170,0.43);
     padding: 10px 14px;
     border-radius: 18px;
 }
@@ -66,30 +66,38 @@
 }
 
 .cal-day.firstchoice > span{
-   background: #c0e1f1;
+   /*background: #c0e1f1;*/
+   background:#E2C9AA;
 
 }
-
+.cal-hours {
+   margin-top: 20px;
+   position: relative;
+   top: 30px;
+}
 .cal-hour.selected > span {
-    background:#E2C9AA;
-    padding: 10px 14px;
+    /*background:#E2C9AA;*/
+    background: rgba(226,201,170,0.43);
+    /*padding: 10px 14px;*/
+    padding: 7px 7px;
     border-radius: 18px;
 }
 
 .cal-hour.firstchoice > span {
-   background: #c0e1f1;
+   /*background: #c0e1f1;*/
+   background:#E2C9AA;
 }
 
 .cal-hour.disabled > span {
    color: #ccc;
    /*background-color: #eee;*/
    border-radius: 18px;
-   padding: 10px 14px;
+   padding: 8px 8px;
 }
 
 
 .cal-hour {
-   margin-top: 10px;
+   margin-top: 16px;
 }
 
 
@@ -106,7 +114,10 @@
 .cal-navigator {
    position: relative;
    /*margin-top: 10px;*/
-   height: 10px;
+   /*height: 10px;*/
+   height: 20px;
+   line-height: 30px;
+   font-weight: bold;
 }
 
 .cal-navigator-prev {
@@ -114,6 +125,7 @@
    left: 7.15%;
    top: 0px;
    width: 30px;
+   color: #777;
 }
 
 .cal-navigator-next {
@@ -121,6 +133,7 @@
    right: 1.15%;
    top: 0px;
    width: 30;
+   color: #777;
 }
 
 .cal-navigator-month {

@@ -3,6 +3,7 @@
   <link rel="stylesheet" href="date-picker.css">
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js'></script>
     <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <script src='./date-picker.js'></script>
 
 
 </head>
@@ -10,5 +11,7 @@
 <body>
   <div id='cal-wrapper' class='cal-wrapper'>
   </div>
-  <script src='./date-picker.js'></script>
+  <script>
+    var datePickerView = new datePickerComponent();
+  </script>
 </body>
