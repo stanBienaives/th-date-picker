@@ -52,7 +52,7 @@
 }
 
 .cal-day.current > span {
-  border: solid 2px #bb9e7b; /* #E2C9AA; */
+  border: solid 1px #bb9e7b; /* #E2C9AA; */
   border-radius: 18px;
   padding: 10px 14px;
 }
