@@ -10,8 +10,9 @@
   </head>
   <body>
     ...
-    <div id='cal-wrapper' class='cal-wrapper'>
+    <div id='cal-wrapper' syle='height:600px' class='cal-wrapper'>
     ...
+    <button onclick="doSomething(datePickerView.getDates())">click</button>
 
     <script>
       var date = new Date()

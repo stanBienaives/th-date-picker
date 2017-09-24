@@ -133,9 +133,26 @@ var datePickerComponent = function (config) {
   this.navigatorView = new navigatorComponent();
   this.weekdaysView = new weekdaysComponent();
   this.daysView = new daysComponent();
-  var initialState = new State(config);
-  this.render(initialState);
+  this.state = new State(config);
+  this.render(this.state);
+
 }
+
+
+datePickerComponent.prototype.getDates = function() {
+  var selected = this.state.selected;
+  var firstchoice =  selected[0];
+  selected.splice(0,1);
+  var otherChoices =  selected;
+  var result = {
+    firstchoice: firstchoice,
+    otherChoices: otherChoices,
+  }
+  console.log(result);
+  return result;
+
+}
+
 
 
 datePickerComponent.prototype.render = function (state, oldState) {
