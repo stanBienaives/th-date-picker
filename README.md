@@ -6,7 +6,7 @@
 
 ```html
   <head>
-   <script src='http://date-picker.s3-website-eu-west-1.amazonaws.com/date-picker.js'></script>
+   <script src='https://stanbienaives.github.io/th-date-picker/date-picker.js'></script>
   </head>
   <body>
     ...
