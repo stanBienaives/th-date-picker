@@ -9,7 +9,7 @@ var State = function State(config) {
   this.availableDates = [];
 
   var today = new Date();
-  var firstDisplayDate = today.findLastMonday(today);
+  this.firstDisplayDate = today.findLastMonday(today);
 
   // first date is the last monday
 
@@ -18,7 +18,7 @@ var State = function State(config) {
 
 
   for (var i=0; i<90;i++) {
-    this.availableDates.push(firstDisplayDate.addDay(i));
+    this.availableDates.push(this.firstDisplayDate.addDay(i));
   }
   this.firstSelectableDate = today;
 
@@ -77,6 +77,14 @@ State.prototype.firstPanelDate = function () {
 
 }
 
+State.prototype.panelFromDate = function (date) {
+  var timeDiff = Math.abs(date.getTime() - this.firstDisplayDate.getTime());
+  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+  var cursor =  Math.floor(diffDays / (7 * this.displayedLines));
+  return cursor;
+}
+
 //ACTION RECORD
 var Actions = {
   "TOOGLE_DATE": function (state, date) {
@@ -99,6 +107,7 @@ var Actions = {
   },
   "SET_CURRENT_DATE": function (state, date) {
     state.currentDate = date;
+    state.cursor = state.panelFromDate(date);
     this.render(state);
   },
   "NEXT_PANEL": function (state) {
@@ -201,6 +210,30 @@ var hoursComponent = function (state) {
 
 hoursComponent.prototype.render = function(state, oldState, parent) {
 
+  if( !this.rendered) {
+    swipedetect(this.container, function (dir) {
+      console.log('direction', dir);
+      if( dir == 'right') {
+        console.log('previous panel');
+        Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().removeDay(1));
+      }
+
+      if (dir == 'left') {
+        Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().addDay(1));
+      }
+
+    }.bind(this));
+  }
+    //
+  function currentDate() {
+    return state.currentDate;
+  }
+
+  function currentState() {
+    return state;
+  }
+
+  this.rendered = true;
   this.container.innerHTML = '';
 
   this.silos = [];
