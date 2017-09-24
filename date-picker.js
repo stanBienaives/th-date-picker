@@ -14,13 +14,13 @@ var State = function State(config) {
   // first date is the last monday
 
 
-  this.currentDate = today;
 
 
   for (var i=0; i<90;i++) {
     this.availableDates.push(this.firstDisplayDate.addDay(i));
   }
-  this.firstSelectableDate = today;
+  this.firstSelectableDate = config.firstSelectableDate || today;
+  this.currentDate = this.firstSelectableDate;
 
   this.cursor = 0;
   this.displayedLines = 2;

@@ -12,6 +12,8 @@
   <div id='cal-wrapper' class='cal-wrapper'>
   </div>
   <script>
-var datePickerView = new datePickerComponent({ multipleDates: true });
+    var date = new Date()
+    date.setDate(26);
+    var datePickerView = new datePickerComponent({ multipleDates: true, firstSelectableDate: date });
   </script>
 </body>
