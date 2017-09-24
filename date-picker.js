@@ -236,6 +236,18 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
   this.rendered = true;
   this.container.innerHTML = '';
 
+  var directive = document.createElement('div');
+  directive.className += ' cal-directive';
+  if (state.config.multipleDates && state.selected.length > 0) {
+    directive.innerHTML = '<span> Pr&eacute;cisez toutes vos autres disponibilit&eacute;s </span>';
+  } else {
+    directive.innerHTML = '<span> Choisissez votre date et heure id&eacute;ale </span>';
+  }
+
+
+  this.container.appendChild(directive);
+
+
   this.silos = [];
   for(var i=0; i < 3; i++) {
     var silo = document.createElement('div');

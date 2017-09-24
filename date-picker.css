@@ -27,15 +27,15 @@
     width: 14.28%;
     /*display: table-cell;*/
     margin: auto;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 40px;
+    margin-bottom: 10px;
     float: left;
     /* border-bottom: solid 1px #eee; */
 }
 
 .cal-days {
     width: 100%;
-    line-height: 50px;
+    line-height: 45px;
 }
 
 .cal-day {
@@ -105,6 +105,7 @@
 .cal-hour-silo {
    width: 33%;
    margin: 0px;
+   margin-top: 56px;
    float: left;
    min-height: 50px;
    text-align: center;
@@ -140,5 +141,16 @@
    position: absolute;
    left: 50%;
    transform: translate(-50%, 0);
+}
+
+.cal-directive {
+   height: 20px;
+   text-align: center;
+}
+.cal-directive > span {
+   font-style: italic;
+   color: #999;
+
+
 }
 
