@@ -7,6 +7,7 @@
 ```html
   <head>
    <script src='https://stanbienaives.github.io/th-date-picker/date-picker.js'></script>
+   <script src='https://stanbienaives.github.io/th-date-picker/date-picker.css'></script>
   </head>
   <body>
     ...
