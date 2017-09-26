@@ -6,7 +6,7 @@
 
 ```html
   <head>
-   <script src='https://stanbienaives.github.io/th-date-picker/date-picker.js'></script>
+   <link rel="stylesheet" href="https://stanbienaives.github.io/th-date-picker/date-picker.css">
    <script src='https://stanbienaives.github.io/th-date-picker/date-picker.css'></script>
   </head>
   <body>
