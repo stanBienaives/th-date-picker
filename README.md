@@ -2,6 +2,9 @@
 
 # DATE PICKER
 
+## DEMO
+https://stanbienaives.github.io/th-date-picker/
+
 ## USAGE
 
 ```html
