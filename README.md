@@ -10,7 +10,7 @@ https://stanbienaives.github.io/th-date-picker/
 ```html
   <head>
    <link rel="stylesheet" href="https://stanbienaives.github.io/th-date-picker/date-picker.css">
-   <script src='https://stanbienaives.github.io/th-date-picker/date-picker.css'></script>
+   <script src='https://stanbienaives.github.io/th-date-picker/date-picker.js'></script>
   </head>
   <body>
     ...
