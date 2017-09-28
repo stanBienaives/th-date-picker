@@ -1,6 +1,7 @@
-.body {
+body {
   font-size: 14pt;
 }
+
 .cal-wrapper {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     max-width: 500px;
