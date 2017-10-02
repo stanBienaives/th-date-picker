@@ -8,22 +8,46 @@ var State = function State(config) {
   this.selected = [];
   this.availableDates = [];
 
-  var today = new Date();
-  this.firstDisplayDate = today.findLastMonday(today);
-
-  // first date is the last monday
-
-
-
-
-  for (var i=0; i<90;i++) {
-    this.availableDates.push(this.firstDisplayDate.addDay(i));
-  }
-  this.firstSelectableDate = config.firstSelectableDate || today;
-  this.currentDate = this.firstSelectableDate;
-
   this.cursor = 0;
   this.displayedLines = 2;
+
+  var today = new Date();
+
+  this.firstDisplayDate = today.findLastMonday(today);
+
+  this.firstSelectableDate = config.firstSelectableDate || today;
+  this.lastSelectableDate = config.lastSelectableDate || this.firstSelectableDate.addDay(90);
+
+  this.lastDisplayDate = (new Date()).findNextSunday(this.lastSelectableDate);
+  //this.lastDisplayDate = this.lastSelectableDate;
+
+  //handle case where sunday is not last of the panel
+  var nbdays = this.lastDisplayDate.diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
+
+
+  console.log(nbdays);
+  console.log(nbdays, this.lastDisplayDate, this.firstDisplayDate);
+
+  while((nbdays + 1) % this.displayedLines * 7 != 0) {
+    console.log(nbdays);
+    this.lastDisplayDate = this.lastDisplayDate.addDay(7);
+    nbdays = this.lastDisplayDate.diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
+  }
+
+  this.currentDate = this.firstSelectableDate;
+
+  var date = this.firstDisplayDate;
+  var nbdays = (new Date()).diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
+  for (i = 0; i < nbdays + 1; i++) {
+    this.availableDates.push(this.firstDisplayDate.addDay(i));
+  }
+
+  console.log(this.lastSelectableDate);
+  console.log(this.lastDisplayDate);
+
+  console.log(this.availableDates.length)
+
+
 }
 
 State.prototype.isDateSelected = function (date) {
@@ -64,8 +88,13 @@ State.prototype.isFirst = function (date) {
 }
 
 State.prototype.isSelectable = function (date) {
-  return date >= this.firstSelectableDate;
+  // Offset is meant  to patch a very weird behaviour of addDay
+  // See: https://stackoverflow.com/questions/4790828/comparing-two-dates-using-javascript-not-working-as-expected
+  var offset = 50; //ms
+  var selectable =  ((date.getTime() + offset) >= this.firstSelectableDate.getTime() && (date.getTime() - offset ) <= this.lastSelectableDate.getTime());
+  return selectable;
 }
+
 
 State.prototype.displayMonth = function () {
   return MONTHS[this.firstPanelDate().getMonth()];
@@ -78,8 +107,10 @@ State.prototype.firstPanelDate = function () {
 }
 
 State.prototype.panelFromDate = function (date) {
-  var timeDiff = Math.abs(date.getTime() - this.firstDisplayDate.getTime());
-  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  //var timeDiff = Math.abs(date.getTime() - this.firstDisplayDate.getTime());
+  //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+  var diffDays = date.diffDateInDays(date, this.firstDisplayDate);
 
   var cursor =  Math.floor(diffDays / (7 * this.displayedLines));
   return cursor;
@@ -375,7 +406,7 @@ daysComponent.prototype.render = function (state, oldState, parent) {
     if (state.isSelectable(date)) {
       day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
     } else {
-      day.addEventListener("click", Actions['NEXT_PANEL'].bind(this, state));
+      //day.addEventListener("click", Actions['NEXT_PANEL'].bind(this, state));
     }
 
   }.bind(this));
@@ -395,7 +426,7 @@ var appendColumnsHelper = function(parent, array, buildFunction) {
 
 Date.prototype.addDay = function (days) {
   var dat = new Date(this.valueOf());
-  dat.setDate(dat.getDate() + days);
+  dat.setDate(this.getDate() + days);
   return dat;
 }
 
@@ -406,9 +437,23 @@ Date.prototype.removeDay = function (days) {
   return dat;
 }
 
+Date.prototype.diffDateInDays = function (date1, date2) {
+  var timeDiff = Math.abs(date1.getTime() - date2.getTime());
+  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  return diffDays;
+}
+
 Date.prototype.findLastMonday = function (date) {
   while( date.getDay() != 1) {
     date = date.removeDay(1);
+  }
+  return date;
+}
+
+Date.prototype.findNextSunday = function (date) {
+  while( date.getDay() != 0) {
+    console.log("next", date.getDay());
+    date = date.addDay(1);
   }
   return date;
 }

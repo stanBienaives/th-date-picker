@@ -15,7 +15,9 @@
   <!--<button onclick="datePickerView.getDates()">click</button>-->
   <script>
     var date = new Date()
-    date.setDate(26);
-    var datePickerView = new datePickerComponent({ multipleDates: true, firstSelectableDate: date });
+    date.setDate(4);
+    var endDate = new Date()
+    endDate.setDate(19);
+    var datePickerView = new datePickerComponent({ multipleDates: true, firstSelectableDate: date, lastSelectableDate: endDate });
   </script>
 </body>
