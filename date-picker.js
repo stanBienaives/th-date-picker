@@ -13,37 +13,28 @@ var State = function State(config) {
 
   var today = new Date();
 
-  this.firstDisplayDate = today.findLastMonday(today);
+  this.firstDisplayDate = today.findLastMonday();
 
   this.firstSelectableDate = config.firstSelectableDate || today;
   this.lastSelectableDate = config.lastSelectableDate || this.firstSelectableDate.addDay(90);
 
-  this.lastDisplayDate = (new Date()).findNextSunday(this.lastSelectableDate);
-  //this.lastDisplayDate = this.lastSelectableDate;
+  this.lastDisplayDate = this.lastSelectableDate.findNextSunday();
 
   //handle case where sunday is not last of the panel
-  var nbdays = this.lastDisplayDate.diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
-  console.log(nbdays, this.lastDisplayDate, this.firstDisplayDate);
+  var nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
 
   while((nbdays + 1) % (this.displayedLines * 7) != 0) {
     this.lastDisplayDate = this.lastDisplayDate.addDay(7);
-    console.log(this.lastDisplayDate);
-    nbdays = this.lastDisplayDate.diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
-    console.log('nbdays', nbdays);
+    nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
   }
 
   this.currentDate = this.firstSelectableDate;
 
   var date = this.firstDisplayDate;
-  var nbdays = (new Date()).diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
+  var nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
   for (i = 0; i < nbdays + 1 ; i++) {
     this.availableDates.push(this.firstDisplayDate.addDay(i));
   }
-
-  console.log(this.lastSelectableDate);
-  console.log(this.lastDisplayDate);
-
-  console.log(this.availableDates.length)
 
 
 }
@@ -113,7 +104,7 @@ State.prototype.panelFromDate = function (date) {
   //var timeDiff = Math.abs(date.getTime() - this.firstDisplayDate.getTime());
   //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-  var diffDays = date.diffDateInDays(this.firstDisplayDate, date);
+  var diffDays = diffDateInDays(this.firstDisplayDate, date);
 
   var cursor =  Math.floor(diffDays / (7 * this.displayedLines));
   return cursor;
@@ -135,7 +126,6 @@ var Actions = {
     } else {
       state.selected.splice(position, 1);
     }
-    console.log(state.selected);
     state.currentDate = date;
     this.render(state);
   },
@@ -185,7 +175,6 @@ datePickerComponent.prototype.getDates = function() {
     firstchoice: firstchoice,
     otherChoices: otherChoices,
   }
-  console.log(result);
   return result;
 
 }
@@ -443,7 +432,7 @@ Date.prototype.removeDay = function (days) {
   return dat;
 }
 
-Date.prototype.diffDateInDays = function (first, second) {
+var diffDateInDays = function (first, second) {
   //var timeDiff = Math.abs(date1.getTime() - date2.getTime());
   //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
   //return diffDays;
@@ -460,15 +449,16 @@ Date.prototype.diffDateInDays = function (first, second) {
 }
 
 Date.prototype.findLastMonday = function (date) {
+  var date = new Date(this);
   while( date.getDay() != 1) {
     date = date.removeDay(1);
   }
   return date;
 }
 
-Date.prototype.findNextSunday = function (date) {
+Date.prototype.findNextSunday = function () {
+  var date = new Date(this);
   while( date.getDay() != 0) {
-    console.log("next", date.getDay());
     date = date.addDay(1);
   }
   return date;
