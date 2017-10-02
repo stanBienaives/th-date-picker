@@ -23,22 +23,20 @@ var State = function State(config) {
 
   //handle case where sunday is not last of the panel
   var nbdays = this.lastDisplayDate.diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
-
-
-  console.log(nbdays);
   console.log(nbdays, this.lastDisplayDate, this.firstDisplayDate);
 
-  while((nbdays + 1) % this.displayedLines * 7 != 0) {
-    console.log(nbdays);
+  while((nbdays + 1) % (this.displayedLines * 7) != 0) {
     this.lastDisplayDate = this.lastDisplayDate.addDay(7);
+    console.log(this.lastDisplayDate);
     nbdays = this.lastDisplayDate.diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
+    console.log('nbdays', nbdays);
   }
 
   this.currentDate = this.firstSelectableDate;
 
   var date = this.firstDisplayDate;
   var nbdays = (new Date()).diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
-  for (i = 0; i < nbdays + 1; i++) {
+  for (i = 0; i < nbdays + 1 ; i++) {
     this.availableDates.push(this.firstDisplayDate.addDay(i));
   }
 
@@ -110,7 +108,7 @@ State.prototype.panelFromDate = function (date) {
   //var timeDiff = Math.abs(date.getTime() - this.firstDisplayDate.getTime());
   //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-  var diffDays = date.diffDateInDays(date, this.firstDisplayDate);
+  var diffDays = date.diffDateInDays(this.firstDisplayDate, date);
 
   var cursor =  Math.floor(diffDays / (7 * this.displayedLines));
   return cursor;
@@ -437,10 +435,20 @@ Date.prototype.removeDay = function (days) {
   return dat;
 }
 
-Date.prototype.diffDateInDays = function (date1, date2) {
-  var timeDiff = Math.abs(date1.getTime() - date2.getTime());
-  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  return diffDays;
+Date.prototype.diffDateInDays = function (first, second) {
+  //var timeDiff = Math.abs(date1.getTime() - date2.getTime());
+  //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  //return diffDays;
+  var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
+    var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+
+    // Do the math.
+  var millisecondsPerDay = 1000 * 60 * 60 * 24;
+  var millisBetween = two.getTime() - one.getTime();
+  var days = millisBetween / millisecondsPerDay;
+
+    // Round down.
+  return Math.round(days);
 }
 
 Date.prototype.findLastMonday = function (date) {
