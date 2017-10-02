@@ -101,8 +101,6 @@ State.prototype.numberOfPanels = function () {
 
 
 State.prototype.panelFromDate = function (date) {
-  //var timeDiff = Math.abs(date.getTime() - this.firstDisplayDate.getTime());
-  //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
   var diffDays = diffDateInDays(this.firstDisplayDate, date);
 
@@ -433,13 +431,10 @@ Date.prototype.removeDay = function (days) {
 }
 
 var diffDateInDays = function (first, second) {
-  //var timeDiff = Math.abs(date1.getTime() - date2.getTime());
-  //var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  //return diffDays;
   var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
-    var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+  var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
 
-    // Do the math.
+  // Do the math.
   var millisecondsPerDay = 1000 * 60 * 60 * 24;
   var millisBetween = two.getTime() - one.getTime();
   var days = millisBetween / millisecondsPerDay;
