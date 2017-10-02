@@ -5,7 +5,7 @@ body {
 .cal-wrapper {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     max-width: 500px;
-    min-width: 365px;
+    min-width: 300px;
     width:  100%;
     /*display: table;*/
     border-collapse:separate;
