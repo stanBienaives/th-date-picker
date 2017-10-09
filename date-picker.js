@@ -282,10 +282,10 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
   var directive = document.createElement('div');
   directive.className += ' cal-directive';
   if (state.config.multipleDates && state.selected.length > 0) {
-    directive.innerHTML = '<span> Pr&eacute;cisez toutes vos autres disponibilit&eacute;s </span>';
+    directive.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
     directive.className += ' secondary';
   } else {
-    directive.innerHTML = '<span>  Choisissez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
+    directive.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
   }
 
 
