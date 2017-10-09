@@ -253,20 +253,20 @@ var hoursComponent = function (state) {
 
 hoursComponent.prototype.render = function(state, oldState, parent) {
 
-  if( !this.rendered) {
-    swipedetect(this.container, function (dir) {
-      console.log('direction', dir);
-      if( dir == 'right') {
-        console.log('previous panel');
-        Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().removeDay(1));
-      }
+  //if( !this.rendered) {
+    //swipedetect(this.container, function (dir) {
+      //console.log('direction', dir);
+      //if( dir == 'right') {
+        //console.log('previous panel');
+        //Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().removeDay(1));
+      //}
 
-      if (dir == 'left') {
-        Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().addDay(1));
-      }
+      //if (dir == 'left') {
+        //Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().addDay(1));
+      //}
 
-    }.bind(this));
-  }
+    //}.bind(this));
+  //}
     //
   function currentDate() {
     return state.currentDate;
