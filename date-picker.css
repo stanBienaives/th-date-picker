@@ -5,7 +5,7 @@ body {
 .cal-wrapper {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     max-width: 500px;
-    min-width: 300px;
+    min-width: 280px;
     width:  100%;
     /*display: table;*/
     border-collapse:separate;
@@ -19,6 +19,7 @@ body {
     font-weight: bold;
     /*display: table-row;*/
     display: block;
+    font-size: 12pt;
 }
 
 .cal-weekday {
@@ -48,14 +49,14 @@ body {
 
 .cal-day.selected > span{
     background: rgba(226,201,170,0.43);
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 18px;
 }
 
 .cal-day.current > span {
   border: solid 1px #bb9e7b; /* #E2C9AA; */
   border-radius: 18px;
-  padding: 10px 14px;
+  padding: 8px 12px;
 }
 
 .cal-day.disabled > span {
@@ -120,6 +121,8 @@ body {
    height: 20px;
    line-height: 30px;
    font-weight: bold;
+
+
 }
 
 .cal-navigator-prev {
@@ -128,6 +131,24 @@ body {
    top: 0px;
    width: 30px;
    color: #777;
+}
+
+.cal-navigator-btn {
+  font-family: serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 18px;
+  /*color: black;*/
+  transition: color .1s 0s ease-in-out;
+  display:inline-block;
+  -webkit-transform:scale(1,2.4); /* Safari and Chrome */
+  -moz-transform:scale(1,2.4); /* Firefox */
+  -ms-transform:scale(1,2.4); /* IE 9 */
+  -o-transform:scale(1,2.4); /* Opera */
+  transform:scale(1,2.4); /* W3C */
+  /*position: relative;*/
+
+
 }
 
 .cal-navigator-next {
@@ -148,10 +169,15 @@ body {
    height: 20px;
    text-align: center;
 }
-.cal-directive > span {
-   font-style: italic;
-   color: #999;
 
+.cal-directive > span {
+   font-weight: bold;
+   /*color: #999;*/
+   /*color: #000;*/
+}
+
+.cal-directive.secondary {
+  color: #E2C9AA;
 
 }
 

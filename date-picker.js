@@ -199,12 +199,14 @@ navigatorComponent.prototype.render = function (state, oldState, parent) {
   this.container.innerHTML = '';
   var prevButton = document.createElement('div');
   prevButton.className += ' cal-navigator-prev';
+  prevButton.className += ' cal-navigator-btn';
   prevButton.innerHTML = '<';
   prevButton.addEventListener("click", Actions['PREVIOUS_PANEL'].bind(parent, state));
 
 
   var nextButton = document.createElement('div');
   nextButton.className += ' cal-navigator-next';
+  nextButton.className += ' cal-navigator-btn';
   nextButton.innerHTML = '>';
   nextButton.addEventListener("click", Actions['NEXT_PANEL'].bind(parent, state));
 
@@ -281,8 +283,9 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
   directive.className += ' cal-directive';
   if (state.config.multipleDates && state.selected.length > 0) {
     directive.innerHTML = '<span> Pr&eacute;cisez toutes vos autres disponibilit&eacute;s </span>';
+    directive.className += ' secondary';
   } else {
-    directive.innerHTML = '<span> Choisissez votre date et heure id&eacute;ale </span>';
+    directive.innerHTML = '<span>  Choisissez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
   }
 
 
