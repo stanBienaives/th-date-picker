@@ -213,19 +213,13 @@ datePickerComponent.prototype.render = function (state, oldState) {
 var directiveComponent  = function () {
   var wrapper = document.getElementById('cal-wrapper');
   this.container = document.getElementById('cal-directive');
-
-  //this.container = document.createElement('div');
-  //this.container.className = 'cal-directive';
-  //this.container.id = 'cal-directive';
-  //wrapper.appendChild(this.container);
 }
 
 directiveComponent.prototype.render = function (state, oldState, parent) {
   this.container.innerHTML = '';
-  //this.container.className += ' cal-directive';
-  console.log('innerHTML', this.container.innerHTML);
   if (state.config.multipleDates && state.selected.length > 0) {
     this.container.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
+    this.container.className = this.container.className.replace(' secondary','');
     this.container.className += ' secondary';
   } else {
     this.container.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
@@ -322,18 +316,6 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
   this.container.innerHTML = '';
 
   this.directiveView.render(state);
-
-  //var directive = document.createElement('div');
-  //directive.className += ' cal-directive';
-  //if (state.config.multipleDates && state.selected.length > 0) {
-    //directive.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
-    //directive.className += ' secondary';
-  //} else {
-    //directive.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
-  //}
-
-
-  //this.container.appendChild(directive);
 
 
   this.silos = [];
