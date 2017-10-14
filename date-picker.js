@@ -297,11 +297,11 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
     var silo = document.createElement('div');
     silo.className = 'cal-hour-silo';
     if(i==0)
-      silo.innerHTML = '<span> MATINEE </span>';
+      silo.innerHTML = '<span class=\'cal-hour-silo-header\'> MATINEE </span>';
     if(i==1)
-      silo.innerHTML = '<span> JOURNEE </span>';
+      silo.innerHTML = '<span class=\'cal-hour-silo-header\'> JOURNEE </span>';
     if(i==2)
-      silo.innerHTML = '<span> SOIREE </span>';
+      silo.innerHTML = '<span class=\'cal-hour-silo-header\'> SOIREE </span>';
     this.container.appendChild(silo);
     this.silos.push(silo);
   }
@@ -322,8 +322,8 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
     hour.className = 'cal-hour';
 
 
-    // Quic and dirty
-    var header = silo.querySelector('span');
+    // Quick and dirty
+    var header = silo.querySelector('span.cal-hour-silo-header');
 
 
 
