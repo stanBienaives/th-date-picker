@@ -175,11 +175,12 @@ datePickerComponent.prototype.createCanvas = function () {
 
 }
 
-function createElem(id, className, parent, type) {
+function createElem(className, id, parent, type) {
   type = type || 'div';
   var elem = document.createElement(type);
   elem.className = className;
-  elem.id = id
+  if (id)
+    elem.id = id
   parent.appendChild(elem);
   return elem;
 }
@@ -215,8 +216,9 @@ var directiveComponent  = function () {
   this.container = document.getElementById('cal-directive');
 }
 
-directiveComponent.prototype.render = function (state, oldState, parent) {
+directiveComponent.prototype.render2 = function (state, oldState, parent) {
   this.container.innerHTML = '';
+
   if (state.config.multipleDates && state.selected.length > 0) {
     this.container.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
     this.container.className = this.container.className.replace(' secondary','');
@@ -224,6 +226,35 @@ directiveComponent.prototype.render = function (state, oldState, parent) {
   } else {
     this.container.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
   }
+}
+
+directiveComponent.prototype.render= function(state, oldState, parent) {
+  //var mainDir = createElem('cal-directive-uniq', this.container);
+  this.container.innerHTML = '';
+  var dir1 = createUniqDirective(this.container, '<span>  Date et horaire pr&eacute;f&eacute;r&eacute;s </span>');
+  var dir2 = createUniqDirective(this.container, '<span>  Vos autres disponibilit&eacute;s </span>', 12, true);
+  if (state.config.multipleDates && state.selected.length > 0) {
+    dir2.className += ' active';
+  } else {
+    dir1.className += ' active';
+  }
+
+}
+
+
+function createUniqDirective(wrapper, content, day, isSecondary, isActive) {
+  day = day || 12;
+
+  var directive = createElem('cal-directive-uniq', null, wrapper );
+  var sample = createElem('cal-directive-uniq-sample', null, directive);
+  var legend = createElem('cal-directive-uniq-legend', null, directive);
+  sample.innerHTML = '<span> '+ day + ' </span>';
+  legend.innerHTML = content;
+
+  if (isSecondary) {
+    sample.className += ' secondary';
+  }
+  return directive;
 
 }
 
