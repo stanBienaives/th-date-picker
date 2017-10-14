@@ -155,12 +155,33 @@ var Actions = {
 
 // DATE PICKER COMPONENT
 var datePickerComponent = function (config) {
+  this.createCanvas();
   this.navigatorView = new navigatorComponent();
   this.weekdaysView = new weekdaysComponent();
   this.daysView = new daysComponent();
   this.state = new State(config);
   this.render(this.state);
 
+}
+
+datePickerComponent.prototype.createCanvas = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+
+  createElem('cal-directive', 'cal-directive', wrapper);
+  createElem('cal-navigator', 'cal-navigator', wrapper);
+  createElem('cal-weekdays', 'cal-weekdays', wrapper);
+  createElem('cal-days', 'cal-days', wrapper);
+  createElem('cal-hours', 'cal-hours', wrapper);
+
+}
+
+function createElem(id, className, parent, type) {
+  type = type || 'div';
+  var elem = document.createElement(type);
+  elem.className = className;
+  elem.id = id
+  parent.appendChild(elem);
+  return elem;
 }
 
 
@@ -180,19 +201,44 @@ datePickerComponent.prototype.getDates = function() {
 
 
 datePickerComponent.prototype.render = function (state, oldState) {
+  var wrapper = document.getElementById('cal-wrapper');
+
   this.navigatorView.render(state, oldState, this);
   this.weekdaysView.render(state, oldState);
   this.daysView.render(state, oldState, this);
 }
 
 
+// DIRECTIVE COMPONENT
+var directiveComponent  = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.getElementById('cal-directive');
+
+  //this.container = document.createElement('div');
+  //this.container.className = 'cal-directive';
+  //this.container.id = 'cal-directive';
+  //wrapper.appendChild(this.container);
+}
+
+directiveComponent.prototype.render = function (state, oldState, parent) {
+  this.container.innerHTML = '';
+  //this.container.className += ' cal-directive';
+  console.log('innerHTML', this.container.innerHTML);
+  if (state.config.multipleDates && state.selected.length > 0) {
+    this.container.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
+    this.container.className += ' secondary';
+  } else {
+    this.container.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
+  }
+
+}
+
+
+
 // NAVIGATOR COMPONENT
 var navigatorComponent = function () {
   var wrapper = document.getElementById('cal-wrapper');
-  this.container = document.createElement('div')
-  this.container.className = 'cal-navigator'
-  this.container.id = 'cal-navigator'
-  wrapper.appendChild(this.container);
+  this.container = document.getElementById('cal-navigator')
 }
 
 navigatorComponent.prototype.render = function (state, oldState, parent) {
@@ -224,10 +270,7 @@ navigatorComponent.prototype.render = function (state, oldState, parent) {
 //WEEKDAY COMPONENT
 var weekdaysComponent = function () {
   var wrapper = document.getElementById('cal-wrapper');
-  this.container = document.createElement('div')
-  this.container.className = 'cal-weekdays'
-  this.container.id = 'cal-weekdays'
-  wrapper.appendChild(this.container);
+  this.container = document.getElementById('cal-weekdays')
 
 }
 
@@ -245,14 +288,13 @@ weekdaysComponent.prototype.render =function(state, oldState) {
 // HOURS COMPONENT
 var hoursComponent = function (state) {
   var wrapper = document.getElementById('cal-wrapper');
-  this.container =  document.createElement('div');
-  this.container.id = 'cal-hours';
-  this.container.className = 'cal-hours';
-  wrapper.appendChild(this.container);
+  this.container =  document.getElementById('cal-hours');;
+  this.directiveView = new directiveComponent(state);
 };
 
 hoursComponent.prototype.render = function(state, oldState, parent) {
 
+  // CODE FORW SWIPING RIGHT LEFT ON HOUR CONTAINER
   //if( !this.rendered) {
     //swipedetect(this.container, function (dir) {
       //console.log('direction', dir);
@@ -279,17 +321,19 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
   this.rendered = true;
   this.container.innerHTML = '';
 
-  var directive = document.createElement('div');
-  directive.className += ' cal-directive';
-  if (state.config.multipleDates && state.selected.length > 0) {
-    directive.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
-    directive.className += ' secondary';
-  } else {
-    directive.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
-  }
+  this.directiveView.render(state);
+
+  //var directive = document.createElement('div');
+  //directive.className += ' cal-directive';
+  //if (state.config.multipleDates && state.selected.length > 0) {
+    //directive.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
+    //directive.className += ' secondary';
+  //} else {
+    //directive.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
+  //}
 
 
-  this.container.appendChild(directive);
+  //this.container.appendChild(directive);
 
 
   this.silos = [];
@@ -351,10 +395,7 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
 //DAY COMPONENTS
 var daysComponent = function () {
   var wrapper = document.getElementById('cal-wrapper');
-  this.container = document.createElement('div')
-  this.container.id = 'cal-days';
-  this.container.className = 'cal-days'
-  wrapper.appendChild(this.container);
+  this.container = document.getElementById('cal-days')
 
   this.hoursView = new hoursComponent();
 }
