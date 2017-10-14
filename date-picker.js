@@ -322,6 +322,11 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
     hour.className = 'cal-hour';
 
 
+    // Quic and dirty
+    var header = silo.querySelector('span');
+
+
+
     if (!state.isSelectable(d)) {
       hour.className += ' disabled';
     }
@@ -335,6 +340,7 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
     hour.innerHTML = '<span>' + d.getHours() + ' h</span>';
     if (state.isSelectable(d)) {
       hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(parent, state, d));
+      header.addEventListener("click", Actions["TOOGLE_DATE"].bind(parent, state, d));
     }
     silo.appendChild(hour);
   }
