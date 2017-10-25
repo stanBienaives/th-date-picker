@@ -16,7 +16,13 @@ var State = function State(config) {
   this.firstDisplayDate = today.findLastMonday();
 
   this.firstSelectableDate = config.firstSelectableDate || today;
+
+  this.firstSelectableDate.setMinutes(0);
+  this.firstSelectableDate.setSeconds(0);
+
   this.lastSelectableDate = config.lastSelectableDate || this.firstSelectableDate.addDay(90);
+  this.lastSelectableDate.setMinutes(0);
+  this.lastSelectableDate.setSeconds(0);
 
   this.lastDisplayDate = this.lastSelectableDate.findNextSunday();
 
