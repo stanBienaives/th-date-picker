@@ -14,6 +14,8 @@ var State = function State(config) {
   var today = new Date();
 
   this.firstDisplayDate = today.findLastMonday();
+  this.firstDisplayDate.setMinutes(0);
+  this.firstDisplayDate.setSeconds(0);
 
   this.firstSelectableDate = config.firstSelectableDate || today;
 
