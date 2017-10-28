@@ -14,6 +14,7 @@ var State = function State(config) {
   var today = new Date();
 
   this.firstDisplayDate = today.findLastMonday();
+  this.firstDisplayDate.setHours(0);
   this.firstDisplayDate.setMinutes(0);
   this.firstDisplayDate.setSeconds(0);
 
@@ -91,6 +92,14 @@ State.prototype.isSelectable = function (date) {
   var selectable =  ((date.getTime() + offset) >= this.firstSelectableDate.getTime() && (date.getTime() - offset ) <= this.lastSelectableDate.getTime());
   return selectable;
 }
+
+State.prototype.isSelectableDay = function (date) {
+  var firstSelectableDay = new Date(this.firstSelectableDate);
+  firstSelectableDay.setHours(0);
+  var offset = 50; //ms
+  var selectable =  ((date.getTime() + offset) >= firstSelectableDay.getTime() && (date.getTime() - offset ) <= this.lastSelectableDate.getTime());
+  return selectable;
+};
 
 
 State.prototype.displayMonth = function () {
@@ -451,7 +460,7 @@ daysComponent.prototype.render = function (state, oldState, parent) {
     day.className = 'cal-day';
     day.innerHTML =  '<span>' + date.getDate(); + '</span>';
 
-    if (!state.isSelectable(date)) {
+    if (!state.isSelectableDay(date)) {
       day.className += ' disabled'
     }
 
@@ -467,7 +476,7 @@ daysComponent.prototype.render = function (state, oldState, parent) {
       day.className += ' firstchoice';
     }
 
-    if (state.isSelectable(date)) {
+    if (state.isSelectableDay(date)) {
       day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
     } else {
       //day.addEventListener("click", Actions['NEXT_PANEL'].bind(this, state));
