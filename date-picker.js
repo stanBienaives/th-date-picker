@@ -9,7 +9,7 @@ var State = function State(config) {
   this.availableDates = [];
 
   this.cursor = 0;
-  this.displayedLines = 2;
+  this.displayedLines = 1;
 
   var today = new Date();
 
