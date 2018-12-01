@@ -236,6 +236,7 @@ var navComponent = function (direction) {
 
 navComponent.prototype.render = function (state, oldState, parent) {
 
+  this.container.innerHTML = '';
   if (this.direction === 'next') {
     var nextButton = document.createElement('div');
     nextButton.className += ' cal-navigator-next';
@@ -337,8 +338,11 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
       hour.className += ' selected';
     }
 
-
-    hour.innerHTML = '<span>' + d.getHours() + ':00</span>';
+    var hourString = d.getHours();
+    if (hourString < 10) {
+      hourString = '0' + hourString;
+    }
+    hour.innerHTML = '<span>' + hourString + ':00</span>';
 
     if (state.isSelectable(d)) {
       hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(parent, state, d));
@@ -388,7 +392,7 @@ var displayDayHeader = function (date) {
   var month = date.getMonth();
   var weekdays = date.getDay();
 
-  return  WEEKDAYS[weekdays] +  ' ' + day + ' ' + MONTHS[month];
+  return  WEEKDAYS[weekdays] +  '<br/>' + day + ' ' + MONTHS[month];
 }
 
 Date.prototype.findLastMonday = function (date) {

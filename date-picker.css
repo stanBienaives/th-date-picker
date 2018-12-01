@@ -7,8 +7,10 @@
     max-width: 500px;
     min-width: 280px;
     width:  100%;
+    margin: 10px;
     /*display: table;*/
     border-collapse:separate;
+    display: flex;
     /* border-spacing:5em; */
     /*table-layout: fixed;*/
 }
@@ -37,15 +39,20 @@
 
 .cal-days {
     width: 100%;
-    line-height: 45px;
+    /* line-height: 45px; */
 }
 
 .cal-day {
     text-align: center;
     float: left;
-    width: 14.28%;
+    width: 33%;
     cursor: pointer;
 
+}
+
+.cal-day-header {
+  font-size: 1.1em;
+  font-weight: bold;
 }
 
 .cal-day.selected > span{
@@ -121,22 +128,27 @@
 
 
 .cal-navigator {
+
    position: relative;
    /*margin-top: 10px;*/
    /*height: 10px;*/
-   height: 20px;
+   height: 100%;
+   display: inline-block;
    line-height: 30px;
+   width: 30px;
    font-weight: bold;
 
 
 }
 
 .cal-navigator-prev {
-   position: absolute;
-   left: 5.15%;
-   top: 0px;
-   width: 30px;
+   /* position: absolute; */
+   /* left: 5.15%; */
+   /* top: 0px; */
+   /* width: 30px; */
    color: #777;
+   /* height: 100%; */
+   /* display: inline-block; */
 }
 
 .cal-navigator-btn {
