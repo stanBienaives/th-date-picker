@@ -1,8 +1,6 @@
-var WEEKDAYS = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
+var WEEKDAYS = ['D','L','M','M','J','V','S'];
 
-var MONTHS = ['jan.', 'fev.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dev.'];
-
-var NUMBER_DAY_DISPLAYED = 7;
+var MONTHS = ['JANVIER', 'FEVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN', 'JUILLET', 'AOUT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DECEMBRE'];
 
 var State = function State(config) {
 
@@ -35,7 +33,7 @@ var State = function State(config) {
   var nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
 
   while((nbdays + 1) % (this.displayedLines * 7) != 0) {
-    this.lastDisplayDate = this.lastDisplayDate.addDay(NUMBER_DAY_DISPLAYED);
+    this.lastDisplayDate = this.lastDisplayDate.addDay(7);
     nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
   }
 
@@ -110,12 +108,12 @@ State.prototype.displayMonth = function () {
 }
 
 State.prototype.firstPanelDate = function () {
- return this.availableDates[this.cursor * NUMBER_DAY_DISPLAYED * this.displayedLines];
+ return this.availableDates[this.cursor * 7 * this.displayedLines];
 
 }
 
 State.prototype.numberOfPanels = function () {
-  return Math.ceil(this.availableDates.length / (this.displayedLines * NUMBER_DAY_DISPLAYED));
+  return Math.ceil(this.availableDates.length / (this.displayedLines * 7));
 }
 
 
@@ -123,7 +121,7 @@ State.prototype.panelFromDate = function (date) {
 
   var diffDays = diffDateInDays(this.firstDisplayDate, date);
 
-  var cursor =  Math.floor(diffDays / (NUMBER_DAY_DISPLAYED * this.displayedLines));
+  var cursor =  Math.floor(diffDays / (7 * this.displayedLines));
   return cursor;
 }
 
@@ -144,7 +142,7 @@ var Actions = {
       state.selected.splice(position, 1);
     }
     state.currentDate = date;
-    this.render(state, {}, this);
+    this.render(state);
   },
   "SET_CURRENT_DATE": function (state, date) {
     state.currentDate = date;
@@ -175,19 +173,22 @@ var Actions = {
 // DATE PICKER COMPONENT
 var datePickerComponent = function (config) {
   this.createCanvas();
-  // this.navLeftView = new navLeftComponent();
+  this.navigatorView = new navigatorComponent();
+  this.weekdaysView = new weekdaysComponent();
   this.daysView = new daysComponent();
-  // this.navRightView = new navRightComponent();
   this.state = new State(config);
   this.render(this.state);
+
 }
 
 datePickerComponent.prototype.createCanvas = function () {
   var wrapper = document.getElementById('cal-wrapper');
 
-  createElem('cal-navigator-left', 'cal-navigator-left', wrapper)
+  createElem('cal-directive', 'cal-directive', wrapper);
+  createElem('cal-navigator', 'cal-navigator', wrapper);
+  createElem('cal-weekdays', 'cal-weekdays', wrapper);
   createElem('cal-days', 'cal-days', wrapper);
-  createElem('cal-navigator-right', 'cal-navigator-right', wrapper)
+  createElem('cal-hours', 'cal-hours', wrapper);
 
 }
 
@@ -220,21 +221,140 @@ datePickerComponent.prototype.getDates = function() {
 datePickerComponent.prototype.render = function (state, oldState) {
   var wrapper = document.getElementById('cal-wrapper');
 
-  // this.navigatorView.render(state, oldState, this);
-  // this.weekdaysView.render(state, oldState);
+  this.navigatorView.render(state, oldState, this);
+  this.weekdaysView.render(state, oldState);
   this.daysView.render(state, oldState, this);
 }
 
 
-var daysComponent = function () {
+// DIRECTIVE COMPONENT
+var directiveComponent  = function () {
   var wrapper = document.getElementById('cal-wrapper');
-  this.container = document.getElementById('cal-days')
+  this.container = document.getElementById('cal-directive');
+}
 
-  // this.hoursView = new hoursComponent();
+directiveComponent.prototype.render2 = function (state, oldState, parent) {
+  this.container.innerHTML = '';
+
+  if (state.config.multipleDates && state.selected.length > 0) {
+    this.container.innerHTML = '<span> Et maintenant toutes vos autres disponibilit&eacute;s </span>';
+    this.container.className = this.container.className.replace(' secondary','');
+    this.container.className += ' secondary';
+  } else {
+    this.container.innerHTML = '<span>  S&eacute;lectionnez votre date et horaire pr&eacute;f&eacute;r&eacute;s </span>';
+  }
+}
+
+directiveComponent.prototype.render= function(state, oldState, parent) {
+  //var mainDir = createElem('cal-directive-uniq', this.container);
+  this.container.innerHTML = '';
+  var dir1 = createUniqDirective(this.container, '<span>  Date et horaire pr&eacute;f&eacute;r&eacute;s </span>');
+  var dir2 = createUniqDirective(this.container, '<span>  Vos autres disponibilit&eacute;s </span>', 12, true);
+  if (state.config.multipleDates && state.selected.length > 0) {
+    dir2.className += ' active';
+  } else {
+    dir1.className += ' active';
+  }
 
 }
 
-daysComponent.prototype.render = function (state, oldState, parent) {
+
+function createUniqDirective(wrapper, content, day, isSecondary, isActive) {
+  day = day || 12;
+
+  var directive = createElem('cal-directive-uniq', null, wrapper );
+  var sample = createElem('cal-directive-uniq-sample', null, directive);
+  var legend = createElem('cal-directive-uniq-legend', null, directive);
+  sample.innerHTML = '<span> '+ day + ' </span>';
+  legend.innerHTML = content;
+
+  if (isSecondary) {
+    sample.className += ' secondary';
+  }
+  return directive;
+
+}
+
+
+
+// NAVIGATOR COMPONENT
+var navigatorComponent = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.getElementById('cal-navigator')
+}
+
+navigatorComponent.prototype.render = function (state, oldState, parent) {
+  this.container.innerHTML = '';
+  var prevButton = document.createElement('div');
+  prevButton.className += ' cal-navigator-prev';
+  prevButton.className += ' cal-navigator-btn';
+  prevButton.innerHTML = '<';
+  prevButton.addEventListener("click", Actions['PREVIOUS_PANEL'].bind(parent, state));
+
+
+  var nextButton = document.createElement('div');
+  nextButton.className += ' cal-navigator-next';
+  nextButton.className += ' cal-navigator-btn';
+  nextButton.innerHTML = '>';
+  nextButton.addEventListener("click", Actions['NEXT_PANEL'].bind(parent, state));
+
+  var month = document.createElement('div');
+  month.className += ' cal-navigator-month';
+  month.innerHTML = '<span>' +  state.displayMonth() + '<span>';
+
+  this.container.appendChild(prevButton);
+  this.container.appendChild(month);
+  this.container.appendChild(nextButton);
+
+}
+
+
+//WEEKDAY COMPONENT
+var weekdaysComponent = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.getElementById('cal-weekdays')
+
+}
+
+weekdaysComponent.prototype.render =function(state, oldState) {
+
+  this.container.innerHTML = '';
+  appendColumnsHelper(this.container, state.availableDates.slice(0,7),  function build(weekDay , date) {
+    weekDay.className = 'cal-weekday';
+    weekDay.innerText = WEEKDAYS[date.getDay()];
+  });
+
+
+}
+
+// HOURS COMPONENT
+var hoursComponent = function (state) {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container =  document.getElementById('cal-hours');;
+  this.directiveView = new directiveComponent(state);
+};
+
+hoursComponent.prototype.render = function(state, oldState, parent) {
+
+  // CODE FORW SWIPING RIGHT LEFT ON HOUR CONTAINER
+  //if( !this.rendered) {
+    //swipedetect(this.container, function (dir) {
+      //console.log('direction', dir);
+      //if( dir == 'right') {
+        //console.log('previous panel');
+        //Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().removeDay(1));
+      //}
+
+      //if (dir == 'left') {
+        //Actions['SET_CURRENT_DATE'].bind(parent)(currentState(), currentDate().addDay(1));
+      //}
+
+    //}.bind(this));
+  //}
+    //
+  function currentDate() {
+    return state.currentDate;
+  }
 
   function currentState() {
     return state;
@@ -243,49 +363,43 @@ daysComponent.prototype.render = function (state, oldState, parent) {
   this.rendered = true;
   this.container.innerHTML = '';
 
-  var start = state.cursor * NUMBER_DAY_DISPLAYED * state.displayedLines;
-  var stop  = start + NUMBER_DAY_DISPLAYED * state.displayedLines;
-  state.availableDates.slice(start, stop).forEach(function createDayView(date) {
-    var dayView = new dayComponent(date);
-    dayView.render(state, oldState, this);
-  }.bind(this));
-}
+  this.directiveView.render(state);
 
 
-var dayComponent = function (date) {
-  this.date = date;
-}
+  this.silos = [];
+  for(var i=0; i < 3; i++) {
+    var silo = document.createElement('div');
+    silo.className = 'cal-hour-silo';
+    if(i==0)
+      silo.innerHTML = '<span class=\'cal-hour-silo-header\'> MATINEE </span>';
+    if(i==1)
+      silo.innerHTML = '<span class=\'cal-hour-silo-header\'> JOURNEE </span>';
+    if(i==2)
+      silo.innerHTML = '<span class=\'cal-hour-silo-header\'> SOIREE </span>';
+    this.container.appendChild(silo);
+    this.silos.push(silo);
+  }
 
-
-dayComponent.prototype.render = function(state, oldState, parent) {
-
-  if (!this.container)
-    this.container = createElem('cal-day', '', parent.container);
-
-  this.container.innerHTML = '';
-
-  // elem.innerHTML = displayDayHeader(this.date);
-
-  var hoursView = new hoursComponent(this.date);
-  hoursView.render(state, oldState, this);
-
-}
-
-
-var hoursComponent = function(date, container) {
-  this.date = date;
-}
-
-hoursComponent.prototype.render = function(state, oldState, parent) {
-  this.rendered = true;
-  this.innerHTML = '';
 
   for(var i=6;i < 22;i++) {
-    var d = new Date(this.date);
-    d.setHours(i);
+    var d = new Date(state.currentDate);
+    var silo;
+    if( i <=11)
+      silo = this.silos[0];
+    if ( i > 11 && i <= 17)
+      silo = this.silos[1];
+    if (i > 17)
+      silo = this.silos[2];
 
+    d.setHours(i);
     var hour = document.createElement('div');
     hour.className = 'cal-hour';
+
+
+    // Quick and dirty
+    var header = silo.querySelector('span.cal-hour-silo-header');
+
+
 
     if (!state.isSelectable(d)) {
       hour.className += ' disabled';
@@ -297,16 +411,82 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
     if (state.isFirst(d)) {
       hour.className += ' firstchoice';
     }
-
-    hour.innerHTML = '<span>' + d.getHours() + ':00</span>';
-
+    hour.innerHTML = '<span>' + d.getHours() + ' h</span>';
     if (state.isSelectable(d)) {
       hour.addEventListener("click", Actions["TOOGLE_DATE"].bind(parent, state, d));
+      header.addEventListener("click", Actions["TOOGLE_DATE"].bind(parent, state, d));
     }
-    parent.container.appendChild(hour);
+    silo.appendChild(hour);
   }
+
+
 }
 
+//DAY COMPONENTS
+var daysComponent = function () {
+  var wrapper = document.getElementById('cal-wrapper');
+  this.container = document.getElementById('cal-days')
+
+  this.hoursView = new hoursComponent();
+}
+
+daysComponent.prototype.render = function (state, oldState, parent) {
+
+  if( !this.rendered) {
+    swipedetect(this.container, function (dir) {
+      console.log('direction', dir);
+      if( dir == 'right') {
+        console.log('previous panel');
+        Actions['PREVIOUS_PANEL'].bind(parent)(currentState());
+      }
+
+      if (dir == 'left') {
+        Actions['NEXT_PANEL'].bind(parent)(currentState());
+      }
+
+    }.bind(this));
+  }
+    //
+  function currentState() {
+    return state;
+  }
+
+  this.rendered = true;
+  this.container.innerHTML = '';
+
+  var start = state.cursor * 7 * state.displayedLines;
+  var stop  = start + 7*state.displayedLines;
+  appendColumnsHelper(this.container, state.availableDates.slice(start, stop), function(day, date, i) {
+    day.className = 'cal-day';
+    day.innerHTML =  '<span>' + date.getDate(); + '</span>';
+
+    if (!state.isSelectableDay(date)) {
+      day.className += ' disabled'
+    }
+
+    if (state.isDateSelected(date)) {
+      day.className += ' selected';
+    }
+
+    if (state.isCurrentDate(date)) {
+      day.className += ' current';
+    }
+
+    if (state.isDateFirstSelected(date)) {
+      day.className += ' firstchoice';
+    }
+
+    if (state.isSelectableDay(date)) {
+      day.addEventListener("click", Actions["SET_CURRENT_DATE"].bind(this, state, date));
+    } else {
+      //day.addEventListener("click", Actions['NEXT_PANEL'].bind(this, state));
+    }
+
+  }.bind(this));
+
+  this.hoursView.render(state, oldState, this);
+
+}
 
 // HELPER
 var appendColumnsHelper = function(parent, array, buildFunction) {
@@ -341,14 +521,6 @@ var diffDateInDays = function (first, second) {
 
     // Round down.
   return Math.round(days);
-}
-
-var displayDayHeader = function (date) {
-  var day = date.getDate();
-  var month = date.getMonth();
-  var weekdays = date.getDay();
-
-  return  WEEKDAYS[weekdays] +  ' ' + day + ' ' + MONTHS[month];
 }
 
 Date.prototype.findLastMonday = function (date) {
