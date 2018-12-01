@@ -266,10 +266,24 @@ dayComponent.prototype.render = function(state, oldState, parent) {
 
   // elem.innerHTML = displayDayHeader(this.date);
 
+  var dayHeaderView = new dayHeaderComponent(this.date);
+
+
   var hoursView = new hoursComponent(this.date);
+  dayHeaderView.render(state, oldState, this);
   hoursView.render(state, oldState, this);
 
 }
+
+var dayHeaderComponent = function (date) {
+  this.date = date;
+}
+
+dayHeaderComponent.prototype.render = function(state, oldState, parent) {
+  var header = createElem('cal-day-header', '' , parent.container);
+  header.innerHTML = displayDayHeader(this.date);
+}
+
 
 
 var hoursComponent = function(date, container) {
@@ -294,9 +308,6 @@ hoursComponent.prototype.render = function(state, oldState, parent) {
       hour.className += ' selected';
     }
 
-    if (state.isFirst(d)) {
-      hour.className += ' firstchoice';
-    }
 
     hour.innerHTML = '<span>' + d.getHours() + ':00</span>';
 
