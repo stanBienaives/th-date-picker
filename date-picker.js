@@ -2,7 +2,7 @@ var WEEKDAYS = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
 
 var MONTHS = ['jan.', 'fev.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dec.'];
 
-var NUMBER_DAY_DISPLAYED = 4;
+var NUMBER_DAY_DISPLAYED = 3;
 
 var State = function State(config) {
 
@@ -175,9 +175,10 @@ var Actions = {
 // DATE PICKER COMPONENT
 var datePickerComponent = function (config) {
   this.createCanvas();
-  // this.navLeftView = new navLeftComponent();
+  this.navPrevView = new navComponent('prev');
   this.daysView = new daysComponent();
   // this.navRightView = new navRightComponent();
+  this.navNextView = new navComponent('next');
   this.state = new State(config);
   this.render(this.state);
 }
@@ -185,9 +186,9 @@ var datePickerComponent = function (config) {
 datePickerComponent.prototype.createCanvas = function () {
   var wrapper = document.getElementById('cal-wrapper');
 
-  createElem('cal-navigator-left', 'cal-navigator-left', wrapper)
+  createElem('cal-navigator-prev', 'cal-navigator-prev', wrapper)
   createElem('cal-days', 'cal-days', wrapper);
-  createElem('cal-navigator-right', 'cal-navigator-right', wrapper)
+  createElem('cal-navigator-next', 'cal-navigator-next', wrapper)
 
 }
 
@@ -215,14 +216,42 @@ datePickerComponent.prototype.getDates = function() {
 
 }
 
-
-
 datePickerComponent.prototype.render = function (state, oldState) {
   var wrapper = document.getElementById('cal-wrapper');
 
-  // this.navigatorView.render(state, oldState, this);
+  this.navPrevView.render(state, oldState, this);
   // this.weekdaysView.render(state, oldState);
   this.daysView.render(state, oldState, this);
+  this.navNextView.render(state, oldState, this);
+}
+
+var navComponent = function (direction) {
+  this.direction = direction;
+  if( direction === 'next') {
+    this.container = document.getElementById('cal-navigator-next');
+  } else {
+    this.container = document.getElementById('cal-navigator-prev');
+  }
+}
+
+navComponent.prototype.render = function (state, oldState, parent) {
+
+  if (this.direction === 'next') {
+    var nextButton = document.createElement('div');
+    nextButton.className += ' cal-navigator-next';
+    nextButton.className += ' cal-navigator-btn';
+    nextButton.innerHTML = '>';
+    nextButton.addEventListener("click", Actions['NEXT_PANEL'].bind(parent, state));
+    this.container.appendChild(nextButton);
+  } else {
+    var prevButton = document.createElement('div');
+    prevButton.className += ' cal-navigator-prev';
+    prevButton.className += ' cal-navigator-btn';
+    prevButton.innerHTML = '<';
+    prevButton.addEventListener("click", Actions['PREVIOUS_PANEL'].bind(parent, state));
+    this.container.appendChild(prevButton);
+  }
+
 }
 
 
