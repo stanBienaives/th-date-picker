@@ -1,8 +1,8 @@
 var WEEKDAYS = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
 
-var MONTHS = ['jan.', 'fev.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dev.'];
+var MONTHS = ['jan.', 'fev.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dec.'];
 
-var NUMBER_DAY_DISPLAYED = 7;
+var NUMBER_DAY_DISPLAYED = 4;
 
 var State = function State(config) {
 
@@ -15,7 +15,7 @@ var State = function State(config) {
 
   var today = new Date();
 
-  this.firstDisplayDate = today.findLastMonday();
+  this.firstDisplayDate = today;
   this.firstDisplayDate.setHours(0);
   this.firstDisplayDate.setMinutes(0);
   this.firstDisplayDate.setSeconds(0);
@@ -34,8 +34,8 @@ var State = function State(config) {
   //handle case where sunday is not last of the panel
   var nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
 
-  while((nbdays + 1) % (this.displayedLines * 7) != 0) {
-    this.lastDisplayDate = this.lastDisplayDate.addDay(NUMBER_DAY_DISPLAYED);
+  while((nbdays + 1) % (this.displayedLines * NUMBER_DAY_DISPLAYED) != 0) {
+    this.lastDisplayDate = this.lastDisplayDate.addDay(1);
     nbdays = diffDateInDays(this.firstDisplayDate, this.lastDisplayDate);
   }
 
