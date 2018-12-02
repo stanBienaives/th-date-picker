@@ -137,6 +137,7 @@
    line-height: 30px;
    width: 30px;
    font-weight: bold;
+   text-align: center;
 
 
 }
@@ -149,11 +150,13 @@
    color: #777;
    /* height: 100%; */
    /* display: inline-block; */
+   text-align: right;
 }
 
 .cal-navigator-btn {
 
   width: 30px;
+  /* text-align: center; */
   font-family: serif;
   font-weight: 300;
   font-style: normal;
@@ -178,6 +181,7 @@
    top: 0px;
    width: 30;
    color: #777; */
+   text-align: left;
 }
 
 .cal-navigator-month {
