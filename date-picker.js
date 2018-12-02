@@ -175,11 +175,11 @@ var Actions = {
 // DATE PICKER COMPONENT
 var datePickerComponent = function (config) {
   this.createCanvas();
+  this.state = new State(config);
   this.navPrevView = new navComponent('prev');
-  this.daysView = new daysComponent();
+  this.daysView = new daysComponent(this.state);
   // this.navRightView = new navRightComponent();
   this.navNextView = new navComponent('next');
-  this.state = new State(config);
   this.render(this.state);
 }
 
@@ -259,9 +259,24 @@ navComponent.prototype.render = function (state, oldState, parent) {
 }
 
 
-var daysComponent = function () {
+var daysComponent = function (state) {
   var wrapper = document.getElementById('cal-wrapper');
   this.container = document.getElementById('cal-days')
+
+  if( !this.rendered) {
+    swipedetect(this.container, function (dir) {
+      console.log('direction', dir);
+      if( dir == 'right') {
+        console.log('previous panel');
+        Actions['PREVIOUS_PANEL'].bind(this)(state);
+      }
+
+      if (dir == 'left') {
+        Actions['NEXT_PANEL'].bind(this)(state);
+      }
+
+    }.bind(this));
+  }
 
   // this.hoursView = new hoursComponent();
 
