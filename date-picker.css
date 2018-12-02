@@ -153,6 +153,7 @@
 
 .cal-navigator-btn {
 
+  width: 30px;
   font-family: serif;
   font-weight: 300;
   font-style: normal;
@@ -172,11 +173,11 @@
 }
 
 .cal-navigator-next {
-   position: absolute;
+   /* position: absolute;
    right: 0.15%;
    top: 0px;
    width: 30;
-   color: #777;
+   color: #777; */
 }
 
 .cal-navigator-month {

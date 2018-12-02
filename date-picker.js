@@ -155,6 +155,8 @@ var Actions = {
     if (state.cursor == state.numberOfPanels() - 1)
       return;
 
+    console.log('NEXT_PANEL', state.cursor);
+
     state.cursor += 1;
     state.currentDate = state.firstPanelDate();
     this.render(state);
@@ -186,9 +188,9 @@ var datePickerComponent = function (config) {
 datePickerComponent.prototype.createCanvas = function () {
   var wrapper = document.getElementById('cal-wrapper');
 
-  createElem('cal-navigator-prev', 'cal-navigator-prev', wrapper)
+  createElem('cal-navigator-container', 'cal-navigator-prev', wrapper)
   createElem('cal-days', 'cal-days', wrapper);
-  createElem('cal-navigator-next', 'cal-navigator-next', wrapper)
+  createElem('cal-navigator-container', 'cal-navigator-next', wrapper)
 
 }
 
@@ -242,13 +244,16 @@ navComponent.prototype.render = function (state, oldState, parent) {
     nextButton.className += ' cal-navigator-next';
     nextButton.className += ' cal-navigator-btn';
     nextButton.innerHTML = '>';
+    // this.container.removeEventListener("click", Actions['NEXT_PANEL'].bind(parent, state));
     nextButton.addEventListener("click", Actions['NEXT_PANEL'].bind(parent, state));
+
     this.container.appendChild(nextButton);
   } else {
     var prevButton = document.createElement('div');
     prevButton.className += ' cal-navigator-prev';
     prevButton.className += ' cal-navigator-btn';
     prevButton.innerHTML = '<';
+    // this.container.removeEventListener("click", Actions['PREVIOUS_PANEL'].bind(parent, state));
     prevButton.addEventListener("click", Actions['PREVIOUS_PANEL'].bind(parent, state));
     this.container.appendChild(prevButton);
   }
