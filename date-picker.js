@@ -15,10 +15,10 @@ var State = function State(config) {
 
   var today = new Date();
 
-  this.firstDisplayDate = today;
-  this.firstDisplayDate.setHours(0);
-  this.firstDisplayDate.setMinutes(0);
-  this.firstDisplayDate.setSeconds(0);
+  this.firstDisplayDate = config.firstSelectableDate || today;
+  // this.firstDisplayDate.setHours(0);
+  // this.firstDisplayDate.setMinutes(0);
+  // this.firstDisplayDate.setSeconds(0);
 
   this.firstSelectableDate = config.firstSelectableDate || today;
 
@@ -154,8 +154,6 @@ var Actions = {
   "NEXT_PANEL": function (state) {
     if (state.cursor == state.numberOfPanels() - 1)
       return;
-
-    console.log('NEXT_PANEL', state.cursor);
 
     state.cursor += 1;
     state.currentDate = state.firstPanelDate();
