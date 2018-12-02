@@ -263,20 +263,20 @@ var daysComponent = function (state) {
   var wrapper = document.getElementById('cal-wrapper');
   this.container = document.getElementById('cal-days')
 
-  // if( !this.rendered) {
-  //   swipedetect(this.container, function (dir) {
-  //     console.log('direction', dir);
-  //     if( dir == 'right') {
-  //       console.log('previous panel');
-  //       Actions['PREVIOUS_PANEL'].bind(this)(state);
-  //     }
+  if( !this.rendered) {
+    swipedetect(this.container, function (dir) {
+      console.log('direction', dir);
+      if( dir == 'right') {
+        console.log('previous panel');
+        Actions['PREVIOUS_PANEL'].bind(this)(state);
+      }
 
-  //     if (dir == 'left') {
-  //       Actions['NEXT_PANEL'].bind(this)(state);
-  //     }
+      if (dir == 'left') {
+        Actions['NEXT_PANEL'].bind(this)(state);
+      }
 
-  //   }.bind(this));
-  // }
+    }.bind(this));
+  }
 
   // this.hoursView = new hoursComponent();
 
@@ -466,7 +466,7 @@ function swipedetect(el, callback){
     }, false)
 
     touchsurface.addEventListener('touchmove', function(e){
-        e.preventDefault() // prevent scrolling when inside DIV
+        // e.preventDefault() // prevent scrolling when inside DIV
     }, false)
 
     touchsurface.addEventListener('touchend', function(e){
